@@ -531,6 +531,11 @@ void mqttOTCallback(char* topic, char* value) {
     }        
     rules_event_cb(_F("?"), topic);
   }      
+    else if (strcmp_P(topic, PSTR("roomSetOverride")) == 0) {
+      log_message(_F("OpenTherm: MQTT message received 'roomSetOverride'"));
+      getOTStructMember(_F("roomSetOverride"))->value.f = String(value).toFloat();
+      rules_event_cb(_F("?"), topic);
+    }
 }
 
 void openthermJsonOutput(struct webserver_t *client) {
