@@ -353,7 +353,8 @@ void processOTRequest(unsigned long request, OpenThermResponseStatus status) {
         if (getOTStructMember(_F("roomSetOverride"))->value.f > -99) {
           unsigned long data = ot.temperatureToData(getOTStructMember(_F("roomSetOverride"))->value.f);
           otResponse = ot.buildResponse(OpenThermMessageType::READ_ACK, OpenThermMessageID::TrOverride, data);
-
+          // Reset after processing
+          getOTStructMember(_F("roomSetOverride"))->value.f = -99;
         } else {
           otResponse = ot.buildResponse(OpenThermMessageType::DATA_INVALID, OpenThermMessageID::TrOverride, request & 0xffff);
         }
@@ -636,6 +637,11 @@ void openthermJsonOutput(struct webserver_t *client) {
   webserver_send_content_P(client, PSTR("\"coolingState\":{\"type\": \"R\",\"value\":"), 36);
   getOTStructMember(_F("coolingState"))->value.b ? webserver_send_content_P(client, PSTR("true"), 4) : webserver_send_content_P(client, PSTR("false"), 5);
   webserver_send_content_P(client, PSTR("},"), 2);  
+  //roomSetOverride
+  webserver_send_content_P(client, PSTR("\"roomSetOverride\":{\"type\": \"R\",\"value\":"), 41);
+  dtostrf( getOTStructMember(_F("roomSetOverride"))->value.f, 0, 2, str);
+  webserver_send_content(client, str, strlen(str));
+  webserver_send_content_P(client, PSTR("},"), 2);
   //dhwSetUppBound
   webserver_send_content_P(client, PSTR("\"dhwSetUppBound\":{\"type\": \"R\",\"value\":"), 38);
   itoa( getOTStructMember(_F("dhwSetUppBound"))->value.f, str, 10);
