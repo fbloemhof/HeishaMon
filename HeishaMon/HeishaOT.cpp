@@ -637,11 +637,6 @@ void openthermJsonOutput(struct webserver_t *client) {
   webserver_send_content_P(client, PSTR("\"coolingState\":{\"type\": \"R\",\"value\":"), 36);
   getOTStructMember(_F("coolingState"))->value.b ? webserver_send_content_P(client, PSTR("true"), 4) : webserver_send_content_P(client, PSTR("false"), 5);
   webserver_send_content_P(client, PSTR("},"), 2);  
-  //roomSetOverride
-  webserver_send_content_P(client, PSTR("\"roomSetOverride\":{\"type\": \"R\",\"value\":"), 41);
-  dtostrf( getOTStructMember(_F("roomSetOverride"))->value.f, 0, 2, str);
-  webserver_send_content(client, str, strlen(str));
-  webserver_send_content_P(client, PSTR("},"), 2);
   //dhwSetUppBound
   webserver_send_content_P(client, PSTR("\"dhwSetUppBound\":{\"type\": \"R\",\"value\":"), 38);
   itoa( getOTStructMember(_F("dhwSetUppBound"))->value.f, str, 10);
